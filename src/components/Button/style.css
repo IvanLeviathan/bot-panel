@@ -1,0 +1,7 @@
+.btn.btn-discord{
+  background-color: #5865f2;
+  border-color: #5865f2;
+}
+.btn.btn-discord.focus, .btn.btn-discord:focus{
+  box-shadow: 0 0 0 0.2rem rgb(88 101 242 / 50%);
+}
