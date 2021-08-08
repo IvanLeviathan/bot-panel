@@ -78,6 +78,7 @@ const authReducer = (state = initState, action) => {
         let date = new Date();
         cookies.set(app.COOKIE_ACCESS, action.payload.access_token, { path: '/', maxAge: date.setDate(date.getDate() + 7) });
         cookies.set(app.COOKIE_REFRESH, action.payload.refresh_token, { path: '/', maxAge: date.setDate(date.getDate() + 7) });
+        window.location.href = app.REDIRECT_URI;
         newState = {...state, AUTH: true, AUTH_TOKEN: action.payload.access_token};
       }else if(action.payload.error){
         if(action.payload.error_description)
@@ -85,8 +86,8 @@ const authReducer = (state = initState, action) => {
       }
       return {...newState, IS_LOADING: false};
     case actionType.LOGOUT_USER:
-      cookies.remove(app.COOKIE_ACCESS);
-      cookies.remove(app.COOKIE_REFRESH);
+      cookies.remove(app.COOKIE_ACCESS, {path: '/'});
+      cookies.remove(app.COOKIE_REFRESH, {path: '/'});
       window.location.reload();
       return state;
     default:
