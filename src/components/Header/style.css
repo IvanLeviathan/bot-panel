@@ -66,5 +66,9 @@ header{
   animation: slideDown .5s;
   top: 100%;
 }
+.navbar-brand img{
+  width: 40px;
+  height: 40px;
+}
 
 

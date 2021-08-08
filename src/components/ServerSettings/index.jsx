@@ -98,7 +98,6 @@ export default function ServerSettings({settings = {}, stat=[], channels = [], c
 }
 
 ServerSettings.propTypes = {
-  settings: PropTypes.object,
   stat: PropTypes.array,
   channels: PropTypes.array,
   curGuild: PropTypes.object,

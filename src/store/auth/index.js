@@ -14,7 +14,8 @@ const initState = {
 
 const actionType = {
   CHECK_AUTH: 'CHECK_AUTH',
-  AUTH_USER: 'AUTH_USER'
+  AUTH_USER: 'AUTH_USER',
+  LOGOUT_USER: 'LOGOUT_USER'
 }
 
 
@@ -56,6 +57,12 @@ const actionSetAuth = (payload) => {
   }
 }
 
+export const actionLogoutUser = () => {
+  return {
+    type: actionType.LOGOUT_USER
+  }
+}
+
 
 const authReducer = (state = initState, action) => {
   let newState;
@@ -77,6 +84,11 @@ const authReducer = (state = initState, action) => {
           newState = {...state, AUTH_ERROR: action.payload.error_description};
       }
       return {...newState, IS_LOADING: false};
+    case actionType.LOGOUT_USER:
+      cookies.remove(app.COOKIE_ACCESS);
+      cookies.remove(app.COOKIE_REFRESH);
+      window.location.reload();
+      return state;
     default:
       return state;
   }

@@ -6,6 +6,7 @@ import { actionGetUser} from '../store/user';
 import { actionChangeCurrentGuild, actionGetUserGuilds } from '../store/guilds';
 import Header from '../components/Header';
 import { actionGetAllServersWhereBotIs } from '../store/firebase';
+import { actionLogoutUser } from '../store/auth';
 
 export default function HeaderContainer() {
   const context = useContext(Context);
@@ -50,9 +51,7 @@ export default function HeaderContainer() {
   }
 
   const logout = () => {
-    cookies.remove(app.COOKIE_ACCESS);
-    cookies.remove(app.COOKIE_REFRESH);
-    window.location.reload();
+    dispatch(actionLogoutUser());
   }
   return <Header
     user={user}
