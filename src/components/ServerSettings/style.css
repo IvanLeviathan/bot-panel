@@ -1,0 +1,30 @@
+.bot-main-info img{
+  width: 300px;
+  height: 300px;
+  max-width: 100%;
+}
+@media(max-width: 991px){
+  .bot-main-info img{
+    width: auto;
+    height: auto;
+  }
+}
+
+.bot-color{
+  display: flex;
+  align-items: center;
+}
+.bot-color span{
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+}
+.bot-settings p{
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}
+.stat-table-wrapper{
+  max-height: 300px;
+  overflow-y: scroll;
+}

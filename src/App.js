@@ -1,7 +1,6 @@
 import './App.css';
 import Spinner from './components/Spinner';
 import Auth from './components/Auth';
-import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import Footer from './components/Footer';
 import { HomePage } from './pages';
@@ -13,6 +12,7 @@ import { app } from './_config';
 import { useDispatch, useSelector } from 'react-redux';
 import { actionCheckAuth, actionCheckAuthCode } from './store/auth';
 import HeaderContainer from './container/HeaderContainer';
+import AlertsContainer from './container/AlertsContainer';
 
 function App() {
   const authState = useSelector((state) => state.authReducer);
@@ -40,13 +40,13 @@ function App() {
         }}>
           <div className="App bg-light">
             <HeaderContainer/>
-            <div className="container main-container">
-              <div className="row no-gutters h-100">
-                <div className="col-md-3 bg-white">
+            <div className="container-fluid main-container">
+              <div className="row h-100">
+                <div className="col-md-3 py-3">
                   <Sidebar/>
                 </div>
                 <div className="col-md-9">
-                  <div className="px-2 py-3 content-page">
+                  <div className="content-page py-3">
                     <HomePage/>
                   </div>
                 </div>
@@ -54,6 +54,7 @@ function App() {
             </div>
           </div>
           <Footer/>
+          <AlertsContainer/>
         </Context.Provider>
       )
     }else{

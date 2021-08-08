@@ -1,0 +1,26 @@
+.alerts{
+  position: fixed;
+  z-index: 50;
+  max-width: 500px;
+  width: 100%;
+  left: 50%;
+  top: 5%;
+  transform: translateX(-50%);
+}
+@keyframes slideDownAlert{
+  from{
+    opacity: 0;
+    top: -50px;
+  }
+  top{
+    top: 0;
+    opacity: 1;
+  }
+}
+
+.alerts .alert{
+  position: relative;
+  transition: all .25s ease;
+  top: 0;
+  animation: slideDownAlert .5s ease;
+}

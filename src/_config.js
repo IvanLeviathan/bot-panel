@@ -1,24 +1,31 @@
 require('dotenv').config();
 
+const dev = false;
+
+const urlPrefix = dev ? '' : "/bot-panel";
 
 const links = [
   {
-    name: 'Настройки',
-    url: '/settings'
+    name: 'Главная',
+    url: urlPrefix + '/'
   },
   {
-    name: 'Статистика',
-    url: '/stats'
+    name: 'Настройки',
+    url: urlPrefix + '/settings'
   },
+  // {
+  //   name: 'Статистика',
+  //   url: '/stats'
+  // },
   {
     name: 'Профиль',
-    url: '/profile'
+    url: urlPrefix + '/profile'
   }
 ];
 
 
 
-const dev = false;
+
 
 const app = {
   API_ENDPOINT: 'https://discord.com/api/v8',
@@ -31,4 +38,4 @@ const app = {
 }
 
 
-export {app, links};
+export {app, links, urlPrefix};

@@ -8,17 +8,18 @@ export default function Sidebar() {
   const links = context.links;
 
   return (
-    <div className="px-2 py-3">
-      <h3 className="mb-3">Навигация</h3>
-      <ul className="nav flex-column">
-        {links.map((link) => {
-          return (
-            <li className="nav-item" key={link.url}>
-              <NavLink className="nav-link" activeClassName="text-black-50" to={link.url}>{link.name}</NavLink>
-            </li>
-          )
-        })}
-      </ul>
+    <div className="card">
+      <div className="card-body">
+        <ul className="nav flex-column">
+          {links.map((link) => {
+            return (
+              <li className="nav-item" key={link.url}>
+                <NavLink className="nav-link" activeClassName="text-black-50" exact to={link.url}>{link.name}</NavLink>
+              </li>
+            )
+          })}
+        </ul>
+      </div>
     </div>
   )
 }

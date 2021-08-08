@@ -4,12 +4,16 @@ import thunk from 'redux-thunk';
 import authReducer from './auth';
 import userReducer from './user';
 import guildsReducer from './guilds';
+import firebaseReducer from './firebase';
+import alertsReducer from "./alerts";
 const middleware = [];
 
 const rootReducer = combineReducers({
     authReducer,
     userReducer,
-    guildsReducer
+    guildsReducer,
+    firebaseReducer,
+    alertsReducer
 })
 
 export const configureStore = () => {

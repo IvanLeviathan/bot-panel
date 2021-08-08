@@ -6,11 +6,11 @@
   min-height: calc(100vh - 40px);
 }
 .content-page{
-  background-color: #f1f1f1;
-  overflow-y: auto;
-  height: 100%;
+  /* overflow-y: scroll;
+  max-height: calc(100vh - 100px);
+  height: 100vh; */
 }
 .main-container{
-  height: calc(100vh - 106px);
+  /* height: calc(100vh - 106px); */
 }
 
