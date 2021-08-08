@@ -5,3 +5,6 @@
 .settings-form .chrome-picker {
   width: 100% !important;
 }
+.chrome-picker > div:last-child > .flexbox-fix:first-child > div:last-child > div:last-child{
+  display: none !important;
+}
