@@ -41,8 +41,14 @@ export const actionCheckAuthCode = () => (dispatch) => {
       body: body
     })
     .then(res => res.json())
-    .then(res => {
-      dispatch(actionSetAuth(res))
+    .then(async res => {
+      let date = new Date();
+      if(res.access_token){
+        cookies.set(app.COOKIE_ACCESS, res.access_token, { path: '/', maxAge: date.setDate(date.getDate() + 7) });
+        cookies.set(app.COOKIE_REFRESH, res.refresh_token, { path: '/', maxAge: date.setDate(date.getDate() + 7) });
+        dispatch(actionSetAuth(res));
+      }
+      window.location.href = app.REDIRECT_URI;
     })
     .catch((e) => {
       console.log(e);
@@ -57,10 +63,13 @@ const actionSetAuth = (payload) => {
   }
 }
 
-export const actionLogoutUser = () => {
-  return {
-    type: actionType.LOGOUT_USER
-  }
+export const actionLogoutUser = () => async (dispatch) => {
+  await cookies.remove(app.COOKIE_ACCESS, {path: '/'});
+  await cookies.remove(app.COOKIE_REFRESH, {path: '/'});
+  window.location.reload();
+  // return {
+  //   type: actionType.LOGOUT_USER
+  // }
 }
 
 
@@ -75,10 +84,6 @@ const authReducer = (state = initState, action) => {
       return {...newState, IS_LOADING: false};
     case actionType.AUTH_USER:
       if(action.payload.access_token){
-        let date = new Date();
-        cookies.set(app.COOKIE_ACCESS, action.payload.access_token, { path: '/', maxAge: date.setDate(date.getDate() + 7) });
-        cookies.set(app.COOKIE_REFRESH, action.payload.refresh_token, { path: '/', maxAge: date.setDate(date.getDate() + 7) });
-        window.location.href = app.REDIRECT_URI;
         newState = {...state, AUTH: true, AUTH_TOKEN: action.payload.access_token};
       }else if(action.payload.error){
         if(action.payload.error_description)
@@ -86,9 +91,6 @@ const authReducer = (state = initState, action) => {
       }
       return {...newState, IS_LOADING: false};
     case actionType.LOGOUT_USER:
-      cookies.remove(app.COOKIE_ACCESS, {path: '/'});
-      cookies.remove(app.COOKIE_REFRESH, {path: '/'});
-      window.location.reload();
       return state;
     default:
       return state;
