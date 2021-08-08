@@ -5,9 +5,12 @@
 
 .guilds-list .cur-guild, .guilds-list .guild-item{
   padding: 10px;
-  display: flex;
+  /* display: flex; */
   align-items: center;
   cursor: pointer;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .guilds-list .cur-guild{
   color: #fff;
@@ -17,6 +20,7 @@
   z-index: 40;
   height: 100%;
 }
+
 .guilds-list .cur-guild:hover{
   background-color: #17a2b8;
 }

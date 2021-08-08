@@ -7,6 +7,8 @@ const initState = {
   GUILDS: []
 };
 
+const serverAdminPermissions = '274877906943';
+
 const actionType = {
   SET_USER_GUILDS: 'SET_USER_GUILDS',
   CHANGE_CURRENT_GUILD: 'CHANGE_CURRENT_GUILD'
@@ -46,7 +48,7 @@ export const actionChangeCurrentGuild = (id) => {
 const guildsReducer = (state = initState, action) => {
   switch(action.type){
     case actionType.SET_USER_GUILDS:
-      action.payload = action.payload.filter((guild) => !!action.allServers[guild.id]);
+      action.payload = action.payload.filter((guild) => !!action.allServers[guild.id] && guild.permissions === serverAdminPermissions);
       let curServer = action.payload[0];
 
       let curServerStorageId = localStorage.getItem(storageName);
