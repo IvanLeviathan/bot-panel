@@ -47,7 +47,6 @@ export default function SettingsForm(props) {
             <Select
               value={props.botChannelId}
               onChange={props.setBotChannelId}
-              required={true}
               id='bot-channel'
               options={props.channels}
             />
@@ -66,7 +65,6 @@ export default function SettingsForm(props) {
             <Select
               value={props.botChannelLegionsId}
               onChange={props.setBotChannelLegionsId}
-              required={true}
               id='bot-legions-channel'
               options={props.channels}
             />

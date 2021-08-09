@@ -1,4 +1,5 @@
 import { app } from '../../_config';
+import { actionAddAlert } from '../alerts';
 
 const initState = {};
 
@@ -7,20 +8,33 @@ const actionType = {
 }
 
 export const actionGetUser = (authToken) => (dispatch) => {
-  
-  const headers = {
-    'Authorization': `Bearer ${authToken}`
-  };
-  fetch(app.API_ENDPOINT + '/users/@me', {
+  const params = new URLSearchParams();
+  params.append('auth_token', authToken);
+  params.append('action', 'GET_USER');
+  const header = new Headers();
+  header.append('Content-Type', 'application/json');
+
+ 
+  fetch(app.BOT_API_URL + "?" + params.toString(), {
     method: 'GET',
-    headers: headers
+    headers: header
   })
   .then(res => res.json())
   .then(res => {
-    if(res.avatar)
-      res.avatar = `https://cdn.discordapp.com/avatars/${res.id}/${res.avatar}.png`;
-    dispatch(actionSetUser(res));
+    if(!!res.error){
+      dispatch(actionAddAlert({
+        type: 'danger',
+        text: `Ошибка получения пользователя: ${res.text}`,
+        id: new Date().getTime()
+      }))
+    }else{
+      dispatch(actionSetUser(res));
+    }
   })
+  .catch(e => {
+    console.log(e);
+  })
+
 }
 
 const actionSetUser = (payload) => {

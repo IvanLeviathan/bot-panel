@@ -57,6 +57,7 @@ header{
   top: -1000%;
   max-height: 300px;
   overflow-y: auto;
+  box-shadow: 0px 0px 5px 0px;
 }
 @keyframes slideDown {
   from{

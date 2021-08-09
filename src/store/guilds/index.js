@@ -1,4 +1,5 @@
 import { app } from '../../_config';
+import { actionAddAlert } from '../alerts';
 const storageName = 'cur-server';
 const fetch = require('node-fetch')
 
@@ -15,16 +16,32 @@ const actionType = {
 }
 
 export const actionGetUserGuilds = (authToken, allServers = {}) => (dispatch) => {
-  const headers = {
-    'Authorization': `Bearer ${authToken}`
-  };
-  fetch(app.API_ENDPOINT + '/users/@me/guilds', {
+
+  const params = new URLSearchParams();
+  params.append('auth_token', authToken);
+  params.append('action', 'GET_USER_GUILDS');
+  const header = new Headers();
+  header.append('Content-Type', 'application/json');
+
+ 
+  fetch(app.BOT_API_URL + "?" + params.toString(), {
     method: 'GET',
-    headers: headers
+    headers: header
   })
   .then(res => res.json())
   .then(res => {
-    dispatch(actionSetUserGuilds(res, allServers));
+    if(!!res.error){
+      dispatch(actionAddAlert({
+        type: 'danger',
+        text: `Ошибка получения гильдий: ${res.text}`,
+        id: new Date().getTime()
+      }))
+    }else{
+      dispatch(actionSetUserGuilds(res, allServers));
+    }
+  })
+  .catch(e => {
+    console.log(e);
   })
 }
 
@@ -49,6 +66,7 @@ const guildsReducer = (state = initState, action) => {
   switch(action.type){
     case actionType.SET_USER_GUILDS:
       action.payload = action.payload.filter((guild) => !!action.allServers[guild.id] && guild.permissions === serverAdminPermissions);
+
       let curServer = action.payload[0];
 
       let curServerStorageId = localStorage.getItem(storageName);

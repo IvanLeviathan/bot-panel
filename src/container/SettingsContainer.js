@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import SettingsForm from '../components/SettingsForm';
 import Spinner from '../components/Spinner';
 import {actionGetGuildChannels, actionGetServerSettings, actionUpdateGuildSettings } from '../store/firebase';
+import { Context } from '../context/main';
 
 export default function SettingsContainer() {
   const dispatch = useDispatch();
   const guild = useSelector(state=> state.guildsReducer);
   const firebase = useSelector(state => state.firebaseReducer);
+  const context = useContext(Context);
 
   const [botTitle, setBotNameState] = useState('');
   const [botThumb, setBotPicState] = useState('');
@@ -20,11 +22,11 @@ export default function SettingsContainer() {
   const [botLegionServerPort, setBotPortState] = useState('');
 
   const getServerSettings = () => {
-    dispatch(actionGetServerSettings(guild.CUR_GUILD.id));
+    dispatch(actionGetServerSettings(context.authToken, guild.CUR_GUILD.id));
   }
 
   const getGuildChannels = () => {
-    dispatch(actionGetGuildChannels(guild.CUR_GUILD.id));
+    dispatch(actionGetGuildChannels(context.authToken, guild.CUR_GUILD.id));
   }
 
   useEffect(() => {
@@ -119,7 +121,7 @@ export default function SettingsContainer() {
       botLegionServerIP,
       botLegionServerPort
     }
-    dispatch(actionUpdateGuildSettings(guild.CUR_GUILD.id, formData));
+    dispatch(actionUpdateGuildSettings(context.authToken, guild.CUR_GUILD.id, formData));
   }
 
   return (

@@ -28,7 +28,7 @@ export default function HeaderContainer() {
   }
 
   const getAllServersWhereBotIs = () => {
-    dispatch(actionGetAllServersWhereBotIs());
+    dispatch(actionGetAllServersWhereBotIs(context.authToken));
   }
 
   useEffect(() => {

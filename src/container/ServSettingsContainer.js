@@ -1,24 +1,27 @@
-import React, {useEffect, useMemo, useState } from 'react'
+import React, {useContext, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import ServerSettings from '../components/ServerSettings';
 import { actionGetServerSettings, actionGetServerStat } from '../store/firebase';
 import { actionGetGuildChannels } from '../store/firebase';
+import { Context } from '../context/main';
 
 export default function ServSettingsContainer() {
   const dispatch = useDispatch();
   const guild = useSelector(state=> state.guildsReducer);
   const firebase = useSelector(state => state.firebaseReducer);
+  const context = useContext(Context);
   const [searchValue, setSearchValue] = useState('');
 
   const getServerSettings = () => {
-    dispatch(actionGetServerSettings(guild.CUR_GUILD.id));
+    dispatch(actionGetServerSettings(context.authToken, guild.CUR_GUILD.id));
   }
   const getServerStat = () => {
-    dispatch(actionGetServerStat(guild.CUR_GUILD.id));
+    dispatch(actionGetServerStat(context.authToken, guild.CUR_GUILD.id));
   }
   const getGuildChannels = () => {
-    dispatch(actionGetGuildChannels(guild.CUR_GUILD.id));
+    dispatch(actionGetGuildChannels(context.authToken, guild.CUR_GUILD.id));
   }
+  
   useEffect(() => {
     if(guild.CUR_GUILD.id){
       getServerSettings();

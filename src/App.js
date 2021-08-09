@@ -64,6 +64,7 @@ function App() {
           app
         }}>
             <Auth/>
+            <AlertsContainer/>
         </Context.Provider>
       )
     }

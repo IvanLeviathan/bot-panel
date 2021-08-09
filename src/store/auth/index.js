@@ -1,5 +1,6 @@
 import Cookies from 'universal-cookie';
 import { app } from '../../_config';
+import { actionAddAlert } from '../alerts';
 const cookies = new Cookies();
 
 
@@ -29,30 +30,41 @@ export const actionCheckAuthCode = () => (dispatch) => {
   const urlParams = new URLSearchParams(window.location.search);
   const code = urlParams.get('code');
   if(code){
-    const body = new URLSearchParams();
-    body.append('client_id', app.DS_CLIENT);
-    body.append('client_secret', app.DS_SECRET);
-    body.append('grant_type', 'authorization_code');
-    body.append('code', code);
-    body.append('redirect_uri', app.REDIRECT_URI);
+    const params = new URLSearchParams();
+    params.append('action', 'CHECK_AUTH_CODE');
+    params.append('code', code);
+    params.append('redirect_uri', app.REDIRECT_URI);
 
-    fetch(app.API_ENDPOINT + '/oauth2/token?', {
-      method: 'POST',
-      body: body
+    const header = new Headers();
+    header.append('Content-Type', 'application/json');
+
+    fetch(app.BOT_API_URL + "?" + params.toString(), {
+      method: 'GET',
+      headers: header
     })
     .then(res => res.json())
-    .then(async res => {
-      let date = new Date();
-      if(res.access_token){
-        cookies.set(app.COOKIE_ACCESS, res.access_token, { path: '/', maxAge: date.setDate(date.getDate() + 7) });
-        cookies.set(app.COOKIE_REFRESH, res.refresh_token, { path: '/', maxAge: date.setDate(date.getDate() + 7) });
+    .then(res => {
+      if(!!res.error){
+        dispatch(actionAddAlert({
+          type: 'danger',
+          text: `Ошибка проверки кода авторизации: ${res.text}`,
+          id: new Date().getTime()
+        }))
+      }else{
+        let date = new Date();
+        if(res.access_token){
+          cookies.set(app.COOKIE_ACCESS, res.access_token, { path: '/', maxAge: date.setDate(date.getDate() + 7) });
+          cookies.set(app.COOKIE_REFRESH, res.refresh_token, { path: '/', maxAge: date.setDate(date.getDate() + 7) });
+          dispatch(actionSetAuth(res));
+        }
         dispatch(actionSetAuth(res));
+        window.location.href = app.REDIRECT_URI;
       }
-      window.location.href = app.REDIRECT_URI;
     })
-    .catch((e) => {
+    .catch(e => {
       console.log(e);
     })
+
   }
 }
 

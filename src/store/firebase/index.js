@@ -1,6 +1,7 @@
 import firebase from 'firebase/app';
 import 'firebase/database';
 import { actionAddAlert } from '../alerts';
+import {app} from "../../_config";
 
 const initState = {
   SETTINGS: false,
@@ -17,29 +18,35 @@ const actionType = {
 }
 
 
-
-const firebaseConfig = {
-	"apiKey": process.env.REACT_APP_FB_API_KEY,
-	"authDomain": process.env.REACT_APP_FB_AUTH_DOMAIN,
-	"databaseURL": process.env.REACT_APP_FB_DATABASE_URL,
-	"projectId": process.env.REACT_APP_FB_PROJECT_ID,
-	"storageBucket": process.env.REACT_APP_FB_STORAGE_BUCKET,
-	"messagingSenderId": process.env.REACT_APP_FB_MESSAGING_SENDER_ID,
-	"appId": process.env.REACT_APP_FB_APP_ID,
-	"measurementId": process.env.REACT_APP_FB_MEAUSEREMENT_ID
-};
-
-firebase.initializeApp(firebaseConfig);
-const legionsRef = firebase.database().ref('/legions_settings');
-const statRef = firebase.database().ref('/stat');
-const channelsRef = firebase.database().ref('/channels');
+const header = new Headers();
+header.append('Content-Type', 'application/json');
 
 
-export const actionGetServerSettings = (serverId) => async (dispatch) => {
-  const serverSettingsSnap = await legionsRef.get();
-  const serverSettings = serverSettingsSnap.val();
-  const curServerSettings = serverSettings[serverId] ? serverSettings[serverId] : {};
-  dispatch(actionSetServerSettings(curServerSettings))
+export const actionGetServerSettings = (authToken, serverId) => async (dispatch) => {
+  const params = new URLSearchParams();
+  params.append('auth_token', authToken);
+  params.append('action', 'GET_SERVER_SETTINGS');
+  params.append('server_id', serverId);
+
+  fetch(app.BOT_API_URL + "?" + params.toString(), {
+    method: 'GET',
+    headers: header
+  })
+  .then(res => res.json())
+  .then(res => {
+    if(!!res.error){
+      dispatch(actionAddAlert({
+        type: 'danger',
+        text: `Ошибка получения настроек сервера: ${res.text}`,
+        id: new Date().getTime()
+      }))
+    }else{
+      dispatch(actionSetServerSettings(res))
+    }
+  })
+  .catch(e => {
+    console.log(e);
+  })
 }
 
 const actionSetServerSettings = (payload) => {
@@ -49,11 +56,31 @@ const actionSetServerSettings = (payload) => {
   }
 }
 
-export const actionGetServerStat = (serverId) => async (dispatch) => {
-  const serverStatSnap = await statRef.get();
-  const serverStat = serverStatSnap.val();
-  const curServerStat = serverStat[serverId] ? serverStat[serverId] : {};
-  dispatch(actionSetServerStat(curServerStat));
+export const actionGetServerStat = (authToken, serverId) => async (dispatch) => {
+  const params = new URLSearchParams();
+  params.append('auth_token', authToken);
+  params.append('action', 'GET_SERVER_STATS');
+  params.append('server_id', serverId);
+
+  fetch(app.BOT_API_URL + "?" + params.toString(), {
+    method: 'GET',
+    headers: header
+  })
+  .then(res => res.json())
+  .then(res => {
+    if(!!res.error){
+      dispatch(actionAddAlert({
+        type: 'danger',
+        text: `Ошибка получения статистики сервера: ${res.text}`,
+        id: new Date().getTime()
+      }))
+    }else{
+      dispatch(actionSetServerStat(res));
+    }
+  })
+  .catch(e => {
+    console.log(e);
+  })
 }
 
 const actionSetServerStat = (payload) => {
@@ -63,11 +90,31 @@ const actionSetServerStat = (payload) => {
   }
 }
 
-export const actionGetGuildChannels = (serverId) =>  async (dispatch) => {
-  const dataSnap = await channelsRef.get();
-  const data = dataSnap.val();
-  const curServerData = data[serverId] ? data[serverId] : {};
-  dispatch(actionSetGuildChannels(curServerData));
+export const actionGetGuildChannels = (authToken, serverId) =>  async (dispatch) => {
+  const params = new URLSearchParams();
+  params.append('auth_token', authToken);
+  params.append('action', 'GET_GUILD_CHANNELS');
+  params.append('server_id', serverId);
+
+  fetch(app.BOT_API_URL + "?" + params.toString(), {
+    method: 'GET',
+    headers: header
+  })
+  .then(res => res.json())
+  .then(res => {
+    if(!!res.error){
+      dispatch(actionAddAlert({
+        type: 'danger',
+        text: `Ошибка получения каналов сервера: ${res.text}`,
+        id: new Date().getTime()
+      }))
+    }else{
+      dispatch(actionSetGuildChannels(res));
+    }
+  })
+  .catch(e => {
+    console.log(e);
+  })
 }
 
 const actionSetGuildChannels = (payload) => {
@@ -78,38 +125,68 @@ const actionSetGuildChannels = (payload) => {
 }
 
 
-export const actionUpdateGuildSettings = (serverId, newSettings) => async (dispatch) => {
-  const serverSettingsSnap = await legionsRef.get();
-  const serverSettings = serverSettingsSnap.val();
-  const curServerSettings = serverSettings[serverId] ? serverSettings[serverId] : {};
-  let updatedSettings = {...curServerSettings, ...newSettings};
-  legionsRef.child(serverId).set(
-    updatedSettings,
-    function(error) {
-      if (error) {
-        // console.log("Data could not be saved." + error);
-        dispatch(actionAddAlert({
-          type: 'danger',
-          text: 'Произошла ошибка при сохранении',
-          id: new Date().getTime()
-        }))
-      } else {
-        // console.log("Data saved successfully.");
-        dispatch(actionAddAlert({
-          type: 'success',
-          text: 'Настройки успешно сохранены',
-          id: new Date().getTime()
-        }))
-      }
+export const actionUpdateGuildSettings = (authToken, serverId, newSettings) => async (dispatch) => {
+  const params = new URLSearchParams();
+  params.append('auth_token', authToken);
+  params.append('action', 'UPDATE_GUILD_SETTINGS');
+  params.append('server_id', serverId);
+  params.append('new_settings', JSON.stringify(newSettings));
+
+  fetch(app.BOT_API_URL + "?" + params.toString(), {
+    method: 'GET',
+    headers: header
+  })
+  .then(res => res.json())
+  .then(res => {
+    if(!!res.error){
+      dispatch(actionAddAlert({
+        type: 'danger',
+        text: `Ошибка обновления настроек сервера: ${res.text}`,
+        id: new Date().getTime()
+      }))
+    }else{
+      dispatch(actionAddAlert({
+        type: 'success',
+        text: res.text,
+        id: new Date().getTime()
+      }))
     }
-  );
+  })
+  .catch(e => {
+    console.log(e);
+  })
+
+
+
+
 }
 
 
-export const actionGetAllServersWhereBotIs = () => async (dispatch) =>  {
-  const serverSettingsSnap = await channelsRef.get();
-  const serverSettings = serverSettingsSnap.val();
-  dispatch(actionSetAllServersWhereBotIs(serverSettings));
+export const actionGetAllServersWhereBotIs = (authToken) => async (dispatch) =>  {
+  const params = new URLSearchParams();
+  params.append('auth_token', authToken);
+  params.append('action', 'GET_ALL_SERVER_WHERE_BOT_IS');
+
+  fetch(app.BOT_API_URL + "?" + params.toString(), {
+    method: 'GET',
+    headers: header
+  })
+  .then(res => res.json())
+  .then(res => {
+    if(!!res.error){
+      dispatch(actionAddAlert({
+        type: 'danger',
+        text: `Ошибка получения серверов с ботом: ${res.text}`,
+        id: new Date().getTime()
+      }))
+    }else{
+      dispatch(actionSetAllServersWhereBotIs(res));
+    }
+  })
+  .catch(e => {
+    console.log(e);
+  })
+
 }
 
 const actionSetAllServersWhereBotIs = (payload) => {
