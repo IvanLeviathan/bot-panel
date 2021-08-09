@@ -31,29 +31,37 @@ export default function Header({user = {}, guilds = [], logout = (e) => void 0, 
           </div>
           <div className="col-md-4 mb-4 mb-md-0">
             {
-              guilds.GUILDS.length ? (
-                <div className={guildsOpened ? 'guilds-list show' : 'guilds-list'}>
-                  <div className="cur-guild" onClick={curGuildClick}>
-                    {guilds.CUR_GUILD.icon && (
-                      <img className="rounded-circle" src={`https://cdn.discordapp.com/icons/${guilds.CUR_GUILD.id}/${guilds.CUR_GUILD.icon}.png`} alt={guilds.CUR_GUILD.name} />
-                    )}
-                    {guilds.CUR_GUILD.name}
+              guilds.GUILDS ? (
+                guilds.GUILDS.length ? (
+                  <div className={guildsOpened ? 'guilds-list show' : 'guilds-list'}>
+                    <div className="cur-guild" onClick={curGuildClick}>
+                      {guilds.CUR_GUILD.icon && (
+                        <img className="rounded-circle" src={`https://cdn.discordapp.com/icons/${guilds.CUR_GUILD.id}/${guilds.CUR_GUILD.icon}.png`} alt={guilds.CUR_GUILD.name} />
+                      )}
+                      {guilds.CUR_GUILD.name}
+                    </div>
+                    <div className="guild-list">
+                      {
+                        guilds.GUILDS.map((guild) => {
+                          return(
+                            <div key={guild.id} className={guild.id === guilds.CUR_GUILD.id ? "guild-item current" : 'guild-item'} onClick={() => guildListClick(guild.id)}>
+                              {guild.icon && (
+                                <img className="rounded-circle" src={`https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`} alt={guild.name} />
+                              )}
+                              {guild.name}
+                            </div>
+                          )
+                        })
+                      }
+                    </div>
                   </div>
-                  <div className="guild-list">
-                    {
-                      guilds.GUILDS.map((guild) => {
-                        return(
-                          <div key={guild.id} className={guild.id === guilds.CUR_GUILD.id ? "guild-item current" : 'guild-item'} onClick={() => guildListClick(guild.id)}>
-                            {guild.icon && (
-                              <img className="rounded-circle" src={`https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`} alt={guild.name} />
-                            )}
-                            {guild.name}
-                          </div>
-                        )
-                      })
-                    }
+                ) : (
+                  <div className={'guilds-list'}>
+                    <div className="cur-guild no-guild">
+                      Серверов не найдено
+                    </div>
                   </div>
-                </div>
+                )
               ) : (
                 <Spinner/>
               )

@@ -21,7 +21,7 @@
   height: 100%;
 }
 
-.guilds-list .cur-guild:hover{
+.guilds-list .cur-guild:not(.no-guild):hover{
   background-color: #17a2b8;
 }
 .guilds-list .cur-guild img, .guilds-list .guild-item img{

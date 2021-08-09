@@ -4,6 +4,7 @@ import ServerSettings from '../components/ServerSettings';
 import { actionGetServerSettings, actionGetServerStat } from '../store/firebase';
 import { actionGetGuildChannels } from '../store/firebase';
 import { Context } from '../context/main';
+import NoServers from '../components/NoServers';
 
 export default function ServSettingsContainer() {
   const dispatch = useDispatch();
@@ -44,12 +45,18 @@ export default function ServSettingsContainer() {
     return stats;
   }, [firebase.STAT, searchValue]);
 
-  return <ServerSettings
-    settings = {firebase.SETTINGS}
-    stat = {filterStat}
-    channels = {firebase.CHANNELS}
-    curGuild = {guild.CUR_GUILD}
-    searchInputChange = {searchInputChange}
-    searchInputValue={searchValue}
-  />
+  return (
+    guild.GUILDS ? (
+      <ServerSettings
+        settings = {firebase.SETTINGS}
+        stat = {filterStat}
+        channels = {firebase.CHANNELS}
+        curGuild = {guild.CUR_GUILD}
+        searchInputChange = {searchInputChange}
+        searchInputValue={searchValue}
+      />
+    ) : (
+      <NoServers/>
+    )
+  )
 }

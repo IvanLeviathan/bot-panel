@@ -5,10 +5,10 @@ const fetch = require('node-fetch')
 
 const initState = {
   CUR_GUILD: {},
-  GUILDS: []
+  GUILDS: false
 };
 
-const serverAdminPermissions = '274877906943';
+
 
 const actionType = {
   SET_USER_GUILDS: 'SET_USER_GUILDS',
@@ -65,9 +65,10 @@ export const actionChangeCurrentGuild = (id) => {
 const guildsReducer = (state = initState, action) => {
   switch(action.type){
     case actionType.SET_USER_GUILDS:
-      action.payload = action.payload.filter((guild) => !!action.allServers[guild.id] && guild.permissions === serverAdminPermissions);
+      action.payload = action.payload.filter((guild) => !!action.allServers[guild.id]);
+      // action.payload = action.payload.filter((guild) => guild.id === '123');
 
-      let curServer = action.payload[0];
+      let curServer = action.payload[0] ? action.payload[0] : {};
 
       let curServerStorageId = localStorage.getItem(storageName);
       if(curServerStorageId && action.payload.find((guild) => guild.id === curServerStorageId))

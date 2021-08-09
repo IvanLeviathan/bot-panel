@@ -11,6 +11,7 @@ export default function ServerSettings({settings = {}, stat=[], channels = [], c
       return <span key={channel.id} className="channel-name" title={channel.id}>{channel.name}</span>
     return channelId;
   }
+
   return (
   <div>
     {Object.keys(settings).length ? (
@@ -80,7 +81,7 @@ export default function ServerSettings({settings = {}, stat=[], channels = [], c
                     <tr key={index}>
                       <th scope="row">{index + 1}</th>
                       <td>{item.name}</td>
-                      <td>{new Date(item.time * 1000).toISOString().substr(11, 8)}</td>
+                      <td>{!!item.time ? new Date(typeof item.time == 'object' ? item.time[Object.keys(item.time)[0]] : item.time * 1000).toISOString().substr(11, 8) : null}</td>
                     </tr>
                   )
                 })

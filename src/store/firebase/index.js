@@ -1,5 +1,3 @@
-import firebase from 'firebase/app';
-import 'firebase/database';
 import { actionAddAlert } from '../alerts';
 import {app} from "../../_config";
 

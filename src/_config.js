@@ -32,7 +32,8 @@ const app = {
   DS_AUTH_URL: dev ? process.env.REACT_APP_DS_AUTH_DEV_URL : process.env.REACT_APP_DS_AUTH_URL,
   COOKIE_ACCESS: 'ds-auth-access',
   COOKIE_REFRESH: 'ds-auth-refresh',
-  BOT_API_URL: dev ? process.env.REACT_APP_API_URL_DEV : process.env.REACT_APP_API_URL
+  BOT_API_URL: dev ? process.env.REACT_APP_API_URL_DEV : process.env.REACT_APP_API_URL,
+  ADMIN_PERMISSIONS: '274877906943'
 }
 
 

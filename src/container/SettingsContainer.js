@@ -4,6 +4,8 @@ import SettingsForm from '../components/SettingsForm';
 import Spinner from '../components/Spinner';
 import {actionGetGuildChannels, actionGetServerSettings, actionUpdateGuildSettings } from '../store/firebase';
 import { Context } from '../context/main';
+import { app } from '../_config';
+import NoServers from '../components/NoServers';
 
 export default function SettingsContainer() {
   const dispatch = useDispatch();
@@ -124,6 +126,9 @@ export default function SettingsContainer() {
     dispatch(actionUpdateGuildSettings(context.authToken, guild.CUR_GUILD.id, formData));
   }
 
+  if(!guild.GUILDS.length)
+    return <NoServers/>;
+
   return (
     firebase.SETTINGS ? (
       <SettingsForm
@@ -147,6 +152,8 @@ export default function SettingsContainer() {
         setBotPort={setBotPort}
         channels={makeOptionsFromChannels(firebase.CHANNELS)}
         saveSettingsForm={saveSettingsForm}
+        adminPermissions={app.ADMIN_PERMISSIONS}
+        curGuild={guild.CUR_GUILD}
       />
     ) : <Spinner/>
   )
