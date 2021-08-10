@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const dev = false;
+const dev = true;
 
 const urlPrefix = dev ? '' : "";
 
