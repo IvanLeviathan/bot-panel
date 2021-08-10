@@ -14,41 +14,45 @@ export default function ServerSettings({settings = {}, stat=[], channels = [], c
 
   return (
   <div>
-    {Object.keys(settings).length ? (
-      <div className="list-group">
-        <div className="list-group-item flex-column align-items-start">
-          <div className="d-flex w-100 justify-content-between">
-            <h5 className="mb-3">{curGuild.name}</h5>
-          </div>
-        </div>
-        <div className="list-group-item flex-column align-items-start bot-main-info pt-4">
-          <div className="mb-1 row">
-            <div className="col-md-6">
-              <p className="font-weight-bold text-center h2 mb-4">{settings.botTitle}</p>
-              <p className="text-center"><img className="rounded-circle border" src={settings.botThumb} alt={settings.botTitle} /></p>
-            </div>
-            <div className="col-md-6 bot-settings">
-              <p><b>Канал для рапортов:</b>&nbsp;
-                {findChannel(settings.botChannelId)}
-              </p>
-              <p><b>Канал для общения:</b>&nbsp;
-                {findChannel(settings.botLegionsChannelId)}
-              </p>
-              <p><b>Подпись:</b> {settings.botFooter}</p>
-              <p><b>Подразделения:</b> {settings.botLegion}</p>
-              <p className="bot-color"><b>Цвет:</b> <span style={{backgroundColor: settings.botColor}}></span></p>
-              <p><b>IP:</b> {settings.botLegionServerIP}:{settings.botLegionServerPort}</p>
+    {settings ? (
+      Object.keys(settings).length ? (
+        <div className="list-group">
+          <div className="list-group-item flex-column align-items-start">
+            <div className="d-flex w-100 justify-content-between">
+              <h5 className="mb-3">{curGuild.name}</h5>
             </div>
           </div>
+          <div className="list-group-item flex-column align-items-start bot-main-info pt-4">
+            <div className="mb-1 row">
+              <div className="col-md-6">
+                <p className="font-weight-bold text-center h2 mb-4">{settings.botTitle}</p>
+                <p className="text-center"><img className="rounded-circle border" src={settings.botThumb} alt={settings.botTitle} /></p>
+              </div>
+              <div className="col-md-6 bot-settings">
+                <p><b>Канал для рапортов:</b>&nbsp;
+                  {findChannel(settings.botChannelId)}
+                </p>
+                <p><b>Канал для общения:</b>&nbsp;
+                  {findChannel(settings.botLegionsChannelId)}
+                </p>
+                <p><b>Подпись:</b> {settings.botFooter}</p>
+                <p><b>Подразделения:</b> {settings.botLegion}</p>
+                <p className="bot-color"><b>Цвет:</b> <span style={{backgroundColor: settings.botColor}}></span></p>
+                <p><b>IP:</b> {settings.botLegionServerIP}:{settings.botLegionServerPort}</p>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    ) : (
-      <div className="text-center mb-4">
-        <Spinner/>
-      </div>
+      ) : (
+        <div className="card">
+          <div className="card-body">Настроек бота не обнаружено</div>
+        </div>
+      )
+    ): (
+      <Spinner card={true}/>
     )}
 
-    
+
     <div className="list-group mt-4">
       <div className="list-group-item flex-column align-items-start">
         <div className="mb-4 w-100 justify-content-between">
@@ -101,7 +105,10 @@ export default function ServerSettings({settings = {}, stat=[], channels = [], c
 ServerSettings.propTypes = {
   stat: PropTypes.array,
   channels: PropTypes.array,
-  curGuild: PropTypes.object,
+  curGuild: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.bool
+  ]),
   searchInputChange: PropTypes.func,
   searchInputValue: PropTypes.string
 }

@@ -8,7 +8,7 @@ export default function Sidebar() {
   const links = context.links;
 
   return (
-    <div className="card">
+    <div className="card sidebar-card">
       <div className="card-body">
         <ul className="nav flex-column">
           {links.map((link) => {

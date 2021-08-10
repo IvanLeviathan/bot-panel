@@ -1,0 +1,24 @@
+.user-detail img{
+  max-width: 100%;
+}
+.detail-user-img{
+  width: 80px;
+  height: 80px;
+  overflow: hidden;
+  border-radius: 50%;
+  margin-right: 30px;
+  
+}
+
+.user-detail .card-header{
+  display: flex;
+  align-items: center;
+}
+.user-detail .detail-user-nickname, .user-detail .detail-user-username{
+  font-size: 20px;
+  font-weight: bold;
+}
+.user-detail .detail-user-nickname + .detail-user-username{
+  font-size: 16px;
+  font-weight: normal;
+}

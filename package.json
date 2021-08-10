@@ -2,7 +2,6 @@
   "name": "bot-panel",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://IvanLeviathan.github.io/bot-panel/",
   "dependencies": {
     "@auth0/auth0-react": "^1.6.0",
     "@testing-library/jest-dom": "^5.14.1",

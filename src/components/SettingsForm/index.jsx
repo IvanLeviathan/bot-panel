@@ -32,7 +32,7 @@ export default function SettingsForm(props) {
                 value={props.botPic}
                 onChange={props.setBotPic}
                 required={true}
-                placeholder="Изображения"
+                placeholder="Изображение"
                 id='bot-pic'
               />
               <img className="bot-img my-3" src={props.botPic} alt={props.botName}/>

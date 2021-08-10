@@ -19,7 +19,9 @@ export default function Header({user = {}, guilds = [], logout = (e) => void 0, 
                 {
                   Object.keys(user).length ? (
                     <div className="d-flex align-items-center">
-                      <img src={user.avatar} className="d-inline-block align-top rounded-circle mr-3" alt=""/>
+                      {user.avatar && (
+                        <img src={user.avatar} className="d-inline-block align-top rounded-circle mr-3" alt=""/>
+                      )}
                       <span className="text-white">{user.username}#{user.discriminator}</span>
                     </div>
                   ) : (

@@ -1,7 +1,7 @@
-import React, {useContext, useEffect, useMemo, useState } from 'react'
+import React, {useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import ServerSettings from '../components/ServerSettings';
-import { actionGetServerSettings, actionGetServerStat } from '../store/firebase';
+import { actionGetServerSettings, actionGetServerStat, actionSetServerSettings } from '../store/firebase';
 import { actionGetGuildChannels } from '../store/firebase';
 import { Context } from '../context/main';
 import NoServers from '../components/NoServers';
@@ -16,6 +16,9 @@ export default function ServSettingsContainer() {
   const getServerSettings = () => {
     dispatch(actionGetServerSettings(context.authToken, guild.CUR_GUILD.id));
   }
+  const dropServerSettings = () => {
+    dispatch(actionSetServerSettings(false));
+  }
   const getServerStat = () => {
     dispatch(actionGetServerStat(context.authToken, guild.CUR_GUILD.id));
   }
@@ -23,16 +26,16 @@ export default function ServSettingsContainer() {
     dispatch(actionGetGuildChannels(context.authToken, guild.CUR_GUILD.id));
   }
   
+  
   useEffect(() => {
     if(guild.CUR_GUILD.id){
+      dropServerSettings();
       getServerSettings();
       getServerStat();
       getGuildChannels();
-      setInterval(() => {
-        getServerSettings();
-      }, 300000)
     }
-  }, [guild.CUR_GUILD])
+  }, [guild]);
+
 
   const searchInputChange = (e) => {
     setSearchValue(e.target.value);
@@ -44,9 +47,9 @@ export default function ServSettingsContainer() {
       return stats.filter((item) => item.name.toLowerCase().includes(searchValue.toLowerCase()))
     return stats;
   }, [firebase.STAT, searchValue]);
-
+  
   return (
-    guild.GUILDS ? (
+    guild.GUILDS.length !== 0 ? (
       <ServerSettings
         settings = {firebase.SETTINGS}
         stat = {filterStat}

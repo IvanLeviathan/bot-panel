@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import SettingsForm from '../components/SettingsForm';
 import Spinner from '../components/Spinner';
-import {actionGetGuildChannels, actionGetServerSettings, actionUpdateGuildSettings } from '../store/firebase';
+import {actionGetGuildChannels, actionGetServerSettings, actionSetServerSettings, actionUpdateGuildSettings } from '../store/firebase';
 import { Context } from '../context/main';
 import { app } from '../_config';
 import NoServers from '../components/NoServers';
@@ -27,16 +27,23 @@ export default function SettingsContainer() {
     dispatch(actionGetServerSettings(context.authToken, guild.CUR_GUILD.id));
   }
 
+  const dropServerSettings = () => {
+    dispatch(actionSetServerSettings(false));
+  }
+
   const getGuildChannels = () => {
     dispatch(actionGetGuildChannels(context.authToken, guild.CUR_GUILD.id));
   }
 
   useEffect(() => {
     if(guild.CUR_GUILD.id){
+      dropServerSettings();
       getServerSettings();
       getGuildChannels();
     }
-  }, [guild.CUR_GUILD])
+  }, [guild]);
+
+
 
 
   useEffect(() => {
@@ -99,7 +106,7 @@ export default function SettingsContainer() {
     let channelsToOptions = [];
     for(let channelId in channels){
       let channel = channels[channelId];
-      if(channel.type === 'text'){
+      if(channel.type === 'GUILD_TEXT'){
         channelsToOptions.push({
           text: channel.name,
           value: channel.id
@@ -126,9 +133,9 @@ export default function SettingsContainer() {
     dispatch(actionUpdateGuildSettings(context.authToken, guild.CUR_GUILD.id, formData));
   }
 
-  if(!guild.GUILDS.length)
+  if(guild.GUILDS.length === 0)
     return <NoServers/>;
-
+  
   return (
     firebase.SETTINGS ? (
       <SettingsForm
@@ -155,7 +162,7 @@ export default function SettingsContainer() {
         adminPermissions={app.ADMIN_PERMISSIONS}
         curGuild={guild.CUR_GUILD}
       />
-    ) : <Spinner/>
+    ) : <Spinner card={true}/>
   )
 }
 

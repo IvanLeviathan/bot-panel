@@ -47,7 +47,7 @@ export const actionGetServerSettings = (authToken, serverId) => async (dispatch)
   })
 }
 
-const actionSetServerSettings = (payload) => {
+export const actionSetServerSettings = (payload) => {
   return {
     type: actionType.SET_SERVER_SETTINGS,
     payload
@@ -148,6 +148,7 @@ export const actionUpdateGuildSettings = (authToken, serverId, newSettings) => a
         text: res.text,
         id: new Date().getTime()
       }))
+      dispatch(actionSetServerSettings(newSettings))
     }
   })
   .catch(e => {

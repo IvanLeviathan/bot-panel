@@ -5,6 +5,9 @@
 .App{
   min-height: calc(100vh - 40px);
 }
+body{
+  overflow-y: scroll;
+}
 .content-page{
   /* overflow-y: scroll;
   max-height: calc(100vh - 100px);
@@ -14,3 +17,18 @@
   /* height: calc(100vh - 106px); */
 }
 
+
+@keyframes slideDownCard {
+  from{
+    max-height: 75px;
+  }
+  to{
+    max-height: 2000px;
+  }
+}
+.card:not(.sidebar-card), .list-group{
+  overflow: hidden;
+  margin-bottom: 30px;
+  transition: all .25s ease;
+  animation: slideDownCard 1s;
+}
