@@ -104,7 +104,7 @@ export const actionSetGuildUsers = (payload) => {
 }
 
 
-export const actionGetUserPortfolio = (authToken, serverId, userId) => (dispatch) => {
+export const actionGetUserPortfolio = (authToken, serverId, userId, curPortfolio) => (dispatch) => {
   const params = new URLSearchParams();
   params.append('auth_token', authToken);
   params.append('server_id', serverId);
@@ -127,7 +127,8 @@ export const actionGetUserPortfolio = (authToken, serverId, userId) => (dispatch
         id: new Date().getTime()
       }))
     }else{
-      dispatch(actionSetUserPortfolio(res));
+      if(JSON.stringify(res) !== JSON.stringify(curPortfolio))
+        dispatch(actionSetUserPortfolio(res));
     }
   })
   .catch(e => {

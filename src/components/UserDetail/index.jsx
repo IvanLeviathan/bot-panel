@@ -6,7 +6,6 @@ import Input from '../Input';
 import Textarea from '../Textarea';
 
 export default function UserDetail(props) {
-  props.portfolio.text = props.portfolio.text ? props.portfolio.text : 'данные не найдены'
   return (
     !!props.curUser && props.curUser.username ? (
       <div className="card user-detail">
@@ -52,7 +51,7 @@ export default function UserDetail(props) {
           ) : (
             <div>
               <p className="card-text">
-                {props.portfolio.text}
+                {props.portfolio.text ? props.portfolio.text : 'Данные не найдены'}
               </p>
               {props.portfolio.image && (
                 <img src={props.portfolio.image} alt={props.curUser.username} />

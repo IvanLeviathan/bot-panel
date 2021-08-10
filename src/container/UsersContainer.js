@@ -24,8 +24,8 @@ export default function UsercContainer() {
     dispatch(actionGetGuildUsers(context.authToken, guild.CUR_GUILD.id, guild.CUR_GUILD_USERS));
   }
 
-  const getUserPortfolio = () => {
-    dispatch(actionGetUserPortfolio(context.authToken, guild.CUR_GUILD.id, userId));
+  const getUserPortfolio = (curPortfolio) => {
+    dispatch(actionGetUserPortfolio(context.authToken, guild.CUR_GUILD.id, userId, curPortfolio));
   }
 
 
@@ -35,12 +35,12 @@ export default function UsercContainer() {
   }, [guild]);
 
   useEffect(() => {
-    if(!!userId){
+    if(!!userId && guild.CUR_GUILD.id){
       setEditState(false);
       setButtonText('Изменить');
-      getUserPortfolio();
+      getUserPortfolio(guild.CUR_USER_PORTFOLIO);
     }
-  }, [userId])
+  }, [userId, guild])
 
 
   useEffect(() => {
