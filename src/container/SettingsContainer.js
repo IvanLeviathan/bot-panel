@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import SettingsForm from '../components/SettingsForm';
 import Spinner from '../components/Spinner';
 import {actionGetGuildChannels, actionGetServerSettings, actionSetServerSettings, actionUpdateGuildSettings } from '../store/firebase';
@@ -9,7 +9,7 @@ import NoServers from '../components/NoServers';
 
 export default function SettingsContainer() {
   const dispatch = useDispatch();
-  const guild = useSelector(state=> state.guildsReducer);
+  const guild = useSelector(state=> state.guildsReducer, shallowEqual);
   const firebase = useSelector(state => state.firebaseReducer);
   const context = useContext(Context);
 
@@ -36,15 +36,24 @@ export default function SettingsContainer() {
   }
 
   useEffect(() => {
-    if(guild.CUR_GUILD.id){
-      dropServerSettings();
-      getServerSettings();
-      getGuildChannels();
+    if(!guild.CUR_GUILD.id)
+      return;
+
+    if(!firebase.SETTINGS){
+      return getServerSettings();
     }
-  }, [guild]);
+    
+    if(!firebase.CHANNELS.length){
+      return getGuildChannels();
+    }
 
+    if(guild.CUR_GUILD.id !== firebase.SETTINGS.serverId){
+      dropServerSettings();
+      getGuildChannels();
+      return;
+    }
 
-
+  }, [guild, firebase]);
 
   useEffect(() => {
     if(Object.keys(firebase.SETTINGS).length){

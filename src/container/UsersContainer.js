@@ -1,14 +1,17 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useRouteMatch } from 'react-router-dom/cjs/react-router-dom.min';
+import NoServers from '../components/NoServers';
 import Spinner from '../components/Spinner';
 import UserDetail from '../components/UserDetail';
 import UsersList from '../components/UsersList';
 import { Context } from '../context/main';
+import { actionGetServerSettings } from '../store/firebase';
 import { actionGetGuildUsers, actionGetUserPortfolio, actionSetGuildUsers, actionSetUserPortfolio, actionUpdateUserPortfolio } from '../store/guilds';
 
 export default function UsercContainer() {
   const guild = useSelector(state => state.guildsReducer);
+  const firebase = useSelector(state => state.firebaseReducer);
   const context = useContext(Context);
   const dispatch = useDispatch();
   const match = useRouteMatch('/users/:id');
@@ -28,17 +31,58 @@ export default function UsercContainer() {
     dispatch(actionGetUserPortfolio(context.authToken, guild.CUR_GUILD.id, userId, curPortfolio));
   }
 
+  const getServerSettings = () => {
+    dispatch(actionGetServerSettings(context.authToken, guild.CUR_GUILD.id));
+  }
+
+  const dropGuildUsers = () => {
+    dispatch(actionSetGuildUsers(false));
+  }
+
+  const dropUserPortfolio = () => {
+    dispatch(actionSetUserPortfolio(false));
+  }
+
+  // useEffect(() => {
+  //   if(guild.CUR_GUILD.id)
+  //     getGuildUsers(guild.CUR_GUILD_USERS);
+  // }, [guild]);
 
   useEffect(() => {
-    if(guild.CUR_GUILD.id)
-      getGuildUsers(guild.CUR_GUILD_USERS);
-  }, [guild]);
+    if(!guild.CUR_GUILD.id)
+      return;
+
+    if(!firebase.SETTINGS){
+      return getServerSettings();
+    }
+
+    if(!guild.CUR_GUILD_USERS){
+      return getGuildUsers();
+    }
+
+    if(guild.CUR_GUILD.id !== firebase.SETTINGS.serverId){
+      dropGuildUsers();
+      getServerSettings();
+      return;
+    }
+
+  }, [guild, firebase]);
+
+
 
   useEffect(() => {
-    if(!!userId && guild.CUR_GUILD.id){
+    if(!guild.CUR_GUILD.id)
+      return;
+
+    if(!!userId && !guild.CUR_USER_PORTFOLIO){
       setEditState(false);
       setButtonText('Изменить');
       getUserPortfolio(guild.CUR_USER_PORTFOLIO);
+      return;
+    }
+
+    if(!!userId && !!guild.CUR_USER_PORTFOLIO && userId !== guild.CUR_USER_PORTFOLIO.userId){
+      return dropUserPortfolio();
     }
   }, [userId, guild])
 
@@ -74,6 +118,9 @@ export default function UsercContainer() {
   const textChange = (e) => {
     setText(e.target.value);
   }
+
+  if(guild.GUILDS.length === 0)
+    return <NoServers/>;
 
   return userId ? (
       guild.CUR_USER_PORTFOLIO && guild.CUR_GUILD_USERS ? (

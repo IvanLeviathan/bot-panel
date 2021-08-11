@@ -25,16 +25,28 @@ export default function ServSettingsContainer() {
   const getGuildChannels = () => {
     dispatch(actionGetGuildChannels(context.authToken, guild.CUR_GUILD.id));
   }
-  
-  
+
   useEffect(() => {
-    if(guild.CUR_GUILD.id){
-      dropServerSettings();
+    if(!guild.CUR_GUILD.id)
+      return;
+
+    if(!firebase.SETTINGS){
       getServerSettings();
       getServerStat();
-      getGuildChannels();
+      return;
     }
-  }, [guild]);
+    
+    if(!firebase.CHANNELS.length){
+      return getGuildChannels();
+    }
+
+    if(guild.CUR_GUILD.id !== firebase.SETTINGS.serverId){
+      dropServerSettings();
+      getGuildChannels();
+      return;
+    }
+
+  }, [guild, firebase]);
 
 
   const searchInputChange = (e) => {
@@ -42,10 +54,32 @@ export default function ServSettingsContainer() {
   }
 
   const filterStat = useMemo(() => {
+    if(!firebase.STAT)
+      return false;
+
     let stats = firebase.STAT;
+    const date = new Date();
+    let todayStats = [];
+
+    if(!!stats[date.getFullYear()]){
+      if(!!stats[date.getFullYear()][date.getMonth() + 1]){
+        if(!!stats[date.getFullYear()][date.getMonth() + 1][date.getDate()]){
+          for(let name in stats[date.getFullYear()][date.getMonth() + 1][date.getDate()]){
+            const time = stats[date.getFullYear()][date.getMonth() + 1][date.getDate()][name];
+						let parsedTime = new Date(time * 1000).toISOString().substr(11, 8);
+            todayStats.push({
+              name: atob(name),
+              time: parsedTime
+            })
+          }
+        }
+      }
+    }
+
     if(searchValue.length)
-      return stats.filter((item) => item.name.toLowerCase().includes(searchValue.toLowerCase()))
-    return stats;
+      return todayStats.filter((item) => item.name.toLowerCase().includes(searchValue.toLowerCase()))
+
+    return todayStats;
   }, [firebase.STAT, searchValue]);
   
   return (

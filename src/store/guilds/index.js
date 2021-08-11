@@ -127,6 +127,7 @@ export const actionGetUserPortfolio = (authToken, serverId, userId, curPortfolio
         id: new Date().getTime()
       }))
     }else{
+      res.userId = userId;
       if(JSON.stringify(res) !== JSON.stringify(curPortfolio))
         dispatch(actionSetUserPortfolio(res));
     }
@@ -173,6 +174,7 @@ export const actionUpdateUserPortfolio = (authToken, serverId, userId, newPortfo
         text: `${res.text}`,
         id: new Date().getTime()
       }))
+      newPortfolio.userId = userId;
       dispatch(actionSetUserPortfolio(newPortfolio));
     }
   })

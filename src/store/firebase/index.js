@@ -1,9 +1,10 @@
 import { actionAddAlert } from '../alerts';
 import {app} from "../../_config";
+import { actionSetGuildUsers } from '../guilds';
 
 const initState = {
   SETTINGS: false,
-  STAT: [],
+  STAT: false,
   CHANNELS: [],
   ALL_SERVERS: {}
 };
@@ -39,7 +40,9 @@ export const actionGetServerSettings = (authToken, serverId) => async (dispatch)
         id: new Date().getTime()
       }))
     }else{
-      dispatch(actionSetServerSettings(res))
+      res.serverId = serverId;
+      dispatch(actionSetServerSettings(res));
+      dispatch(actionSetGuildUsers(false));
     }
   })
   .catch(e => {
@@ -148,6 +151,7 @@ export const actionUpdateGuildSettings = (authToken, serverId, newSettings) => a
         text: res.text,
         id: new Date().getTime()
       }))
+      newSettings.serverId = serverId;
       dispatch(actionSetServerSettings(newSettings))
     }
   })
@@ -201,12 +205,7 @@ const firebaseReducer = (state = initState, action) => {
     case actionType.SET_SERVER_SETTINGS:
       return {...state, SETTINGS: action.payload};
     case actionType.SET_SERVER_STAT:
-      let formattedStat = [];
-      for(let name in action.payload){
-        let time = action.payload[name];
-        formattedStat.push({name: atob(name),time});
-      }
-      return {...state, STAT: formattedStat}
+      return {...state, STAT: action.payload}
     case actionType.SET_SERVER_CHANNELS:
       let formattedChannels = [];
       for(let id in action.payload){

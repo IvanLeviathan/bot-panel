@@ -4,7 +4,7 @@ import Spinner from '../Spinner';
 import "./style.css";
 import Input from '../Input';
 
-export default function ServerSettings({settings = {}, stat=[], channels = [], curGuild = {}, searchInputChange = (e) => void 0, searchInputValue = ''}) {
+export default function ServerSettings({settings = {}, stat=false, channels = [], curGuild = {}, searchInputChange = (e) => void 0, searchInputValue = ''}) {
   const findChannel= (channelId) => {
     const channel = channels.find((channel) => channel.id === channelId);
     if(channel)
@@ -19,7 +19,7 @@ export default function ServerSettings({settings = {}, stat=[], channels = [], c
         <div className="list-group">
           <div className="list-group-item flex-column align-items-start">
             <div className="d-flex w-100 justify-content-between">
-              <h5 className="mb-3">{curGuild.name}</h5>
+              <h5 className="mb-0">{curGuild.name}</h5>
             </div>
           </div>
           <div className="list-group-item flex-column align-items-start bot-main-info pt-4">
@@ -52,58 +52,63 @@ export default function ServerSettings({settings = {}, stat=[], channels = [], c
       <Spinner card={true}/>
     )}
 
-
-    <div className="list-group mt-4">
-      <div className="list-group-item flex-column align-items-start">
-        <div className="mb-4 w-100 justify-content-between">
-          <div className="row">
-            <div className="col-6">
-              <h5 className="mb-3">Статистика</h5>
-            </div>
-            <div className="col-6">
-              <Input
-                value={searchInputValue}
-                onChange={searchInputChange}
-                placeholder="Поиск"
-              />
+    {stat ? (
+      <div className="list-group mt-4">
+        <div className="list-group-item flex-column align-items-start">
+          <div className="mb-4 w-100 justify-content-between">
+            <div className="row">
+              <div className="col-6">
+                <h5 className="mb-3">Статистика</h5>
+              </div>
+              <div className="col-6">
+                <Input
+                  value={searchInputValue}
+                  onChange={searchInputChange}
+                  placeholder="Поиск"
+                />
+              </div>
             </div>
           </div>
-        </div>
-        <div className="mb-1 stat-table-wrapper">
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Имя</th>
-                <th scope="col">Время</th>
-              </tr>
-            </thead>
-            <tbody>
-              {
-                stat.map((item, index) => {
-                  return (
-                    <tr key={index}>
-                      <th scope="row">{index + 1}</th>
-                      <td>{item.name}</td>
-                      <td>{!!item.time ? new Date(typeof item.time == 'object' ? item.time[Object.keys(item.time)[0]] : item.time * 1000).toISOString().substr(11, 8) : null}</td>
-                    </tr>
-                  )
-                })
-              }
-            </tbody>
-          </table>
+          <div className="mb-1 stat-table-wrapper">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Имя</th>
+                  <th scope="col">Время</th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  stat.map((item, index) => {
+                    return (
+                      <tr key={index}>
+                        <th scope="row">{index + 1}</th>
+                        <td>{item.name}</td>
+                        <td>{item.time}</td>
+                      </tr>
+                    )
+                  })
+                }
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-    </div>
-      
-    
+    ) : (
+      <Spinner card={true}/>
+    )}
+
 
   </div>
   )
 }
 
 ServerSettings.propTypes = {
-  stat: PropTypes.array,
+  stat: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.bool
+  ]),
   channels: PropTypes.array,
   curGuild: PropTypes.oneOfType([
     PropTypes.object,
