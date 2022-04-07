@@ -8,6 +8,7 @@ export default function Sidebar() {
   const links = context.links;
 
   return (
+    <>
     <div className="card sidebar-card">
       <div className="card-body">
         <ul className="nav flex-column">
@@ -21,5 +22,9 @@ export default function Sidebar() {
         </ul>
       </div>
     </div>
+    {/* <div className="mt-3">
+      <iframe title="discord" src="https://discord.com/widget?id=844866169315262495&theme=dark" width="100%" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+    </div> */}
+  </>
   )
 }

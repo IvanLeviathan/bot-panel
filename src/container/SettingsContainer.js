@@ -1,10 +1,9 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import SettingsForm from '../components/SettingsForm';
 import Spinner from '../components/Spinner';
 import {actionGetGuildChannels, actionGetServerSettings, actionSetServerSettings, actionUpdateGuildSettings } from '../store/firebase';
 import { Context } from '../context/main';
-import { app } from '../_config';
 import NoServers from '../components/NoServers';
 
 export default function SettingsContainer() {
@@ -22,6 +21,11 @@ export default function SettingsContainer() {
   const [botColor, setBotColorState] = useState('');
   const [botLegionServerIP, setBotIpState] = useState('');
   const [botLegionServerPort, setBotPortState] = useState('');
+  const [battleMetricsUrl, setBattleMetricUrlState] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [greetingsText, setGreetingsTextState] = useState('')
+  const [greetingsChannel, setGreetingsChannelState] = useState('')
+  const [greetingsImage, setGreetingsImageState] = useState('')
 
   const getServerSettings = () => {
     dispatch(actionGetServerSettings(context.authToken, guild.CUR_GUILD.id));
@@ -66,6 +70,11 @@ export default function SettingsContainer() {
       setBotColorState(firebase.SETTINGS.botColor);
       setBotIpState(firebase.SETTINGS.botLegionServerIP);
       setBotPortState(firebase.SETTINGS.botLegionServerPort);
+      setBattleMetricUrlState(firebase.SETTINGS.battleMetricsUrl);
+      setIsAdmin(firebase.SETTINGS.isAdmin)
+      setGreetingsTextState(firebase.SETTINGS.greetingsText)
+      setGreetingsChannelState(firebase.SETTINGS.greetingsChannel)
+      setGreetingsImageState(firebase.SETTINGS.greetingsImage)
     }else{
       setBotNameState('');
       setBotPicState('');
@@ -76,6 +85,11 @@ export default function SettingsContainer() {
       setBotColorState('');
       setBotIpState('');
       setBotPortState('');
+      setBattleMetricUrlState('');
+      setIsAdmin(false)
+      setGreetingsTextState('')
+      setGreetingsChannelState('')
+      setGreetingsImageState('')
     }
   }, [firebase.SETTINGS])
 
@@ -96,7 +110,9 @@ export default function SettingsContainer() {
     setBotChannelLegionsIdState(e.target.value);
   }
   const setBotLegion = (e) => {
-    setBotLegionState(e.target.value);
+    let value = e.target.value;
+    value = value.replace(' ', '');
+    setBotLegionState(value);
   }
   const setBotFooter = (e) => {
     setBotFooterState(e.target.value);
@@ -109,6 +125,28 @@ export default function SettingsContainer() {
   }
   const setBotPort = (e) => {
     setBotPortState(e.target.value);
+  }
+
+  const setGreetingsText = (e) => {
+    setGreetingsTextState(e.target.value);
+  }
+  const setGreetingsChannel = (e) => {
+    setGreetingsChannelState(e.target.value);
+  }
+  const setGreetingsImage = (e) => {
+    setGreetingsImageState(e.target.value);
+  }
+
+  const setBattleMetricUrl = (e) => {
+    let value = e.target.value;
+    var re = /https:\/\/www.battlemetrics.com\/servers\/arma3\/(\d+)/i;
+
+    var found = value.match(re);
+    if(!found){
+      setBattleMetricUrlState('');
+    }else{
+      setBattleMetricUrlState(value);
+    }
   }
 
   const makeOptionsFromChannels = (channels) => {
@@ -137,7 +175,12 @@ export default function SettingsContainer() {
       botFooter,
       botColor,
       botLegionServerIP,
-      botLegionServerPort
+      botLegionServerPort,
+      battleMetricsUrl,
+      isAdmin,
+      greetingsChannel,
+      greetingsImage,
+      greetingsText
     }
     dispatch(actionUpdateGuildSettings(context.authToken, guild.CUR_GUILD.id, formData));
   }
@@ -166,9 +209,19 @@ export default function SettingsContainer() {
         setBotIp={setBotIp}
         botPort={botLegionServerPort}
         setBotPort={setBotPort}
+        battleMetricsUrl={battleMetricsUrl}
+        setBattleMetricUrl={setBattleMetricUrl}
         channels={makeOptionsFromChannels(firebase.CHANNELS)}
         saveSettingsForm={saveSettingsForm}
-        adminPermissions={app.ADMIN_PERMISSIONS}
+        isAdmin={isAdmin}
+
+        setGreetingsChannel={setGreetingsChannel}
+        setGreetingsText={setGreetingsText}
+        setGreetingsImage={setGreetingsImage}
+        greetingsChannel={greetingsChannel}
+        greetingsText={greetingsText}
+        greetingsImage={greetingsImage}
+        
         curGuild={guild.CUR_GUILD}
       />
     ) : <Spinner card={true}/>

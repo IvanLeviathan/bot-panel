@@ -1,5 +1,6 @@
 import { app } from '../../_config';
 import { actionAddAlert } from '../alerts';
+import { actionLogoutUser } from '../auth';
 
 const initState = {};
 
@@ -27,6 +28,8 @@ export const actionGetUser = (authToken) => (dispatch) => {
         text: `Ошибка получения пользователя: ${res.text}`,
         id: new Date().getTime()
       }))
+      if(res.status === 401)
+        dispatch(actionLogoutUser())
     }else{
       dispatch(actionSetUser(res));
     }

@@ -1,0 +1,9 @@
+.pagination span{
+  cursor: pointer;
+}
+.pagination{
+  display: block;
+}
+.pagination .page-item{
+  display: inline-block;
+}

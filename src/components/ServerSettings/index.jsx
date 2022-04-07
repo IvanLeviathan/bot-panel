@@ -58,7 +58,7 @@ export default function ServerSettings({settings = {}, stat=false, channels = []
           <div className="mb-4 w-100 justify-content-between">
             <div className="row">
               <div className="col-6">
-                <h5 className="mb-3">Статистика</h5>
+                <h5 className="mb-3">Были сегодня</h5>
               </div>
               <div className="col-6">
                 <Input
@@ -75,7 +75,6 @@ export default function ServerSettings({settings = {}, stat=false, channels = []
                 <tr>
                   <th scope="col">#</th>
                   <th scope="col">Имя</th>
-                  <th scope="col">Время</th>
                 </tr>
               </thead>
               <tbody>
@@ -84,8 +83,7 @@ export default function ServerSettings({settings = {}, stat=false, channels = []
                     return (
                       <tr key={index}>
                         <th scope="row">{index + 1}</th>
-                        <td>{item.name}</td>
-                        <td>{item.time}</td>
+                        <td>{item}</td>
                       </tr>
                     )
                   })

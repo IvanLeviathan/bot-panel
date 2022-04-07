@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useRouteMatch } from 'react-router-dom/cjs/react-router-dom.min';
 import NoServers from '../components/NoServers';
@@ -23,6 +23,10 @@ export default function UsercContainer() {
   const [buttonText, setButtonText] = useState('Изменить');
   const [edit, setEditState] = useState(false);
 
+  const [searchValue, setSearchValueText] = useState('');
+
+  const [isAdmin, setIsAdmin] = useState(false);
+
   const getGuildUsers = () => {
     dispatch(actionGetGuildUsers(context.authToken, guild.CUR_GUILD.id, guild.CUR_GUILD_USERS));
   }
@@ -43,10 +47,6 @@ export default function UsercContainer() {
     dispatch(actionSetUserPortfolio(false));
   }
 
-  // useEffect(() => {
-  //   if(guild.CUR_GUILD.id)
-  //     getGuildUsers(guild.CUR_GUILD_USERS);
-  // }, [guild]);
 
   useEffect(() => {
     if(!guild.CUR_GUILD.id)
@@ -91,6 +91,7 @@ export default function UsercContainer() {
     if(guild.CUR_USER_PORTFOLIO){
       setImage(guild.CUR_USER_PORTFOLIO.image);
       setText(guild.CUR_USER_PORTFOLIO.text);
+      setIsAdmin(guild.CUR_USER_PORTFOLIO.isAdmin)
     }
   }, [guild.CUR_USER_PORTFOLIO])
 
@@ -104,9 +105,11 @@ export default function UsercContainer() {
     if(edit){
       const newPortfolio = {
         text: text,
-        image: image
+        image: image,
+        isAdmin: isAdmin
       }
       dispatch(actionUpdateUserPortfolio(context.authToken, guild.CUR_GUILD.id, userId, newPortfolio));
+      setEditState(false)
     }else{
       setEditState(!edit);
     }
@@ -117,6 +120,24 @@ export default function UsercContainer() {
   }
   const textChange = (e) => {
     setText(e.target.value);
+  }
+  const changeSearchValue = (e) => {
+    setSearchValueText(e.target.value);
+  }
+
+  const filterGuildUsers = (users) => {
+    let usersArr = [];
+    if(!!filterGuildUsers)
+      usersArr = users;
+
+    if(searchValue)
+      usersArr = usersArr.filter((user) => {
+        if(user.nickname)
+          return user.nickname.toLowerCase().includes(searchValue.toLowerCase()) || user.username.toLowerCase().includes(searchValue.toLowerCase());
+        else
+          return user.username.toLowerCase().includes(searchValue.toLowerCase());
+      })
+    return usersArr;
   }
 
   if(guild.GUILDS.length === 0)
@@ -130,6 +151,7 @@ export default function UsercContainer() {
           curGuild={guild.CUR_GUILD}
           buttonText={buttonText}
           onClick={onButtonClick}
+          isAdmin={isAdmin}
           edit={edit}
           image={image}
           imageChange={imageChange}
@@ -143,8 +165,10 @@ export default function UsercContainer() {
       guild.CUR_GUILD_USERS ? (
         <>
         <UsersList
-          users={guild.CUR_GUILD_USERS}
+          users={filterGuildUsers(guild.CUR_GUILD_USERS)}
           curGuild={guild.CUR_GUILD}
+          searchValue={searchValue}
+          changeSearchValue={changeSearchValue}
         />
         </>
       ) : (

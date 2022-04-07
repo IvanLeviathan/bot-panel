@@ -1,13 +1,16 @@
 import React from 'react'
 import Input from '../Input'
 import Select from '../Select';
+import Textarea from '../Textarea';
 import { ChromePicker } from 'react-color';
 import "./style.css";
 import Button from '../Button';
 import NoPermissions from '../NoPermissions';
 
 export default function SettingsForm(props) {
-  if(props.adminPermissions !== props.curGuild.permissions){
+  // console.log(props.curGuild.permissions);
+  // console.log(props.adminPermissions);
+  if(!props.isAdmin){
     return <NoPermissions curGuild={props.curGuild}/>;
   }else{
     return (
@@ -125,7 +128,67 @@ export default function SettingsForm(props) {
                 id='bot-port'
               />
             </div>
+            <div className="form-group">
+              <label htmlFor="battlemetric">Ссылка на battlemetrics.com</label>
+              <Input
+                value={props.battleMetricsUrl}
+                onChange={props.setBattleMetricUrl}
+                required={false}
+                placeholder="battlemetrics.com"
+                id='battlemetric'
+              />
+              <small className="form-text text-muted">Заполняется ТОЛЬКО в том случае, когда бот неспособен "достучаться" до сервера своими средствами.</small>
+            </div>
           </div>
+
+          <div className="col-12"><div className="form-group mt-4"><h3>Приветствие пользователей</h3></div></div>
+          <div className="col-12">
+            <div className="form-group">
+                <label htmlFor="bot-greetings-channel">Канал для приветствия</label>
+                <Input
+                  value={props.greetingsChannel}
+                  onChange={props.setGreetingsChannel}
+                  required={false}
+                  classes="mb-2"
+                  placeholder="Канал для приветствия"
+                  id='bot-greetings-channel'
+                />
+                <Select
+                  value={props.greetingsChannel}
+                  onChange={props.setGreetingsChannel}
+                  id='bot-greetings-channel'
+                  options={props.channels}
+                />
+                <small className="form-text text-muted">Каналы могут обновляться с задержкой. Если нужных каналов нет, используйте обычное поле, которое принимает в себя ID канала.</small>
+              </div>
+          </div>
+          <div className="col-lg-6">
+            <div className="form-group">
+              <label htmlFor="greetings-text">Текст приветствия</label>
+              <Textarea
+                value={props.greetingsText}
+                onChange={props.setGreetingsText}
+                required={false}
+                placeholder="Текст приветствия"
+                id="greetings-text"
+              />
+            </div>
+          </div>
+          <div className="col-lg-6">
+            <div className="form-group">
+              <label htmlFor="greetings-pic">Изображение приветствия</label>
+              <Input
+                value={props.greetingsImage}
+                onChange={props.setGreetingsImage}
+                required={false}
+                placeholder="Изображение"
+                id='greetings-pic'
+              />
+              <img className="bot-img my-3" src={props.greetingsImage} alt="Изображение при приветствии пользователя"/>
+              <small className="form-text text-muted">Вставляем ссылку, так как хранить изображения негде.</small>
+            </div>
+          </div>
+
           <div className="col-12">
             <div className="form-group">
               <Button

@@ -9,6 +9,8 @@ export default function Auth() {
   const discordAuthSend = () => {
     window.location.href = app.DS_AUTH_URL;
   }
+  
+  const curYear = new Date().getFullYear()
 
   return (
     <div className="text-center auth-wrapper">
@@ -20,7 +22,7 @@ export default function Auth() {
           onClick={discordAuthSend}
           classes="btn-discord btn-block"
         />
-        <p className="mt-5 mb-3 text-muted">© 2021 <a href="https://discord.gg/eMauW6ZmhJ" target="_blank" rel="noreferrer">Hesh</a></p>
+        <p className="mt-5 mb-3 text-muted">© 2021 - {curYear} <a href="https://discord.gg/eMauW6ZmhJ" target="_blank" rel="noreferrer">Hesh</a></p>
       </div>
     </div>
   )

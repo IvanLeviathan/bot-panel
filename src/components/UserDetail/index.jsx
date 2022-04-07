@@ -60,7 +60,7 @@ export default function UserDetail(props) {
           )}
 
           {
-            props.curGuild.permissions === app.ADMIN_PERMISSIONS && (
+             props.isAdmin && (
               <Button
                 text={props.buttonText}
                 onClick={props.onClick}

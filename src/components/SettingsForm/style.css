@@ -8,3 +8,7 @@
 .chrome-picker > div:last-child > .flexbox-fix:first-child > div:last-child > div:last-child{
   display: none !important;
 }
+
+.settings-form label{
+  font-weight: bold;
+}

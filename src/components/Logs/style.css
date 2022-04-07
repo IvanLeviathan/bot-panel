@@ -1,0 +1,26 @@
+.logs-list .list-group-item {
+  display: flex;
+  justify-content: space-between;
+}
+.logs-list .list-group-item .left span{
+  display: block;
+}
+.logs-list .list-group-item.UPDATE_SETTINGS{
+  background: #fbebe4
+}
+
+
+.logs-list .list-group-item .date-log{
+  /* color: #a4a4a4 */
+}
+
+@media(max-width: 767px){
+  .logs-list .list-group-item {
+    display: block;
+  }
+  .logs-list .list-group-item .left{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+  }
+}

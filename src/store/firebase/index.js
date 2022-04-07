@@ -43,6 +43,7 @@ export const actionGetServerSettings = (authToken, serverId) => async (dispatch)
       res.serverId = serverId;
       dispatch(actionSetServerSettings(res));
       dispatch(actionSetGuildUsers(false));
+      dispatch(actionSetServerStat(false));
     }
   })
   .catch(e => {
@@ -84,7 +85,7 @@ export const actionGetServerStat = (authToken, serverId) => async (dispatch) => 
   })
 }
 
-const actionSetServerStat = (payload) => {
+export const actionSetServerStat = (payload) => {
   return {
     type: actionType.SET_SERVER_STAT,
     payload
